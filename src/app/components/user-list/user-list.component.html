@@ -1,0 +1,114 @@
+<div class="user-list-container">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">Lista de Usuarios</h1>
+      <div class="header-actions">
+        <div class="user-info" *ngIf="currentUser">
+          <span class="welcome-text">Bienvenido, {{ currentUser.firstName || currentUser.username }}</span>
+          <button class="btn btn-outline-danger btn-sm" (click)="logout()">
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+
+    <!-- Estado de Carga -->
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading-spinner
+        message="Cargando usuarios..."
+        size="large">
+      </app-loading-spinner>
+    </div>
+
+    <!-- Estado de Error -->
+    <div *ngIf="errorMessage && !isLoading" class="error-container">
+      <app-error-message
+        [message]="errorMessage"
+        [showRetryButton]="true"
+        (retry)="retryLoad()">
+      </app-error-message>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <div *ngIf="!isLoading && !errorMessage && users.length > 0" class="users-table-container">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-header">
+            <tr>
+              <th scope="col" class="avatar-column">Foto</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Email</th>
+              <th scope="col" class="actions-column">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; trackBy: trackByUserId" class="user-row">
+
+              <!-- Avatar -->
+              <td class="avatar-cell">
+                <div class="avatar-container">
+                  <img
+                    [src]="user.avatar"
+                    [alt]="'Avatar de ' + user.firstName + ' ' + user.lastName"
+                    class="user-avatar"
+                    (error)="onImageError($event)"
+                    loading="lazy">
+                  <div class="avatar-fallback">
+                    {{ getUserInitials(user) }}
+                  </div>
+                </div>
+              </td>
+
+              <!-- Nombre Completo -->
+              <td class="name-cell">
+                <div class="user-name">
+                  <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                </div>
+              </td>
+
+              <!-- Nombre de Usuario -->
+              <td class="username-cell">
+                <span class="username">{{ user.username }}</span>
+              </td>
+
+              <!-- Email -->
+              <td class="email-cell">
+                <a [href]="'mailto:' + user.email" class="email-link">
+                  {{ user.email }}
+                </a>
+              </td>
+
+              <!-- Acciones -->
+              <td class="actions-cell">
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="viewUserDetails(user.id)"
+                  [attr.aria-label]="'Ver detalles de ' + user.firstName + ' ' + user.lastName">
+                  <span class="btn-icon">👁️</span>
+                  Detalles
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Estado Vacío -->
+    <div *ngIf="!isLoading && !errorMessage && users.length === 0" class="empty-state">
+      <div class="empty-state-icon">👥</div>
+      <h3>No hay usuarios disponibles</h3>
+      <p>No se encontraron usuarios en el sistema.</p>
+      <button class="btn btn-primary" (click)="retryLoad()">
+        Actualizar
+      </button>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,81 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1 class="login-title">Iniciar Sesión</h1>
+      <p class="login-subtitle">Accede a tu cuenta para continuar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
+      <!-- Campo Usuario -->
+      <div class="form-group">
+        <label for="username" class="form-label">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-control"
+          [class.is-invalid]="hasFieldError('username')"
+          placeholder="Ingresa tu usuario"
+          autocomplete="username">
+        <div *ngIf="hasFieldError('username')" class="invalid-feedback">
+          {{ getFieldErrorMessage('username') }}
+        </div>
+      </div>
+
+      <!-- Campo Contraseña -->
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="password-input-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="hasFieldError('password')"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="current-password">
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div *ngIf="hasFieldError('password')" class="invalid-feedback">
+          {{ getFieldErrorMessage('password') }}
+        </div>
+      </div>
+
+      <!-- Mensaje de Error -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Botón de Envío -->
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        [disabled]="isLoading">
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+        <span *ngIf="isLoading">
+          <app-loading-spinner
+            message="Verificando credenciales..."
+            size="small">
+          </app-loading-spinner>
+        </span>
+      </button>
+    </form>
+
+    <!-- Información de Credenciales de Prueba -->
+    <div class="login-help">
+      <h4>Credenciales de Prueba:</h4>
+      <ul>
+        <li><strong>admin</strong> / admin123</li>
+        <li><strong>user</strong> / user123</li>
+        <li><strong>test</strong> / test123</li>
+      </ul>
+    </div>
+  </div>
+</div>

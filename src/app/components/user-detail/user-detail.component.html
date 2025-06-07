@@ -1,0 +1,108 @@
+<div class="user-detail-container">
+  <div class="header">
+    <button
+      type="button"
+      class="btn btn-secondary back-btn"
+      (click)="goBack()"
+      [attr.aria-label]="'Volver a la lista de usuarios'">
+      <i class="icon-arrow-left"></i>
+      Volver
+    </button>
+    <h1 class="page-title">Detalles del Usuario</h1>
+  </div>
+
+  <!-- Loading Spinner -->
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+  <!-- Error Message -->
+  <app-error-message
+    *ngIf="error && !loading"
+    [message]="error"
+    (dismiss)="onErrorDismiss()">
+  </app-error-message>
+
+  <!-- User Details -->
+  <div *ngIf="user && !loading && !error" class="user-detail-card">
+    <div class="user-header">
+      <div class="user-avatar">
+        <img [src]="user.avatar" [alt]="user.username" class="avatar-img">
+      </div>
+      <div class="user-basic-info">
+        <h2 class="user-name">{{ user.username }}</h2>
+        <p class="user-username">{{ '@' + user.username }}</p>
+        <span class="user-status" [class.active]="user.isActive">
+          {{ user.isActive ? 'Activo' : 'Inactivo' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="user-details-grid">
+      <div class="detail-section">
+        <h3>Información de Contacto</h3>
+        <div class="detail-item">
+          <label>Email:</label>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Teléfono:</label>
+          <span>{{ user.phone || 'No disponible' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Sitio Web:</label>
+          <span>
+            <a *ngIf="user.website; else noWebsite"
+               [href]="user.website"
+               target="_blank"
+               rel="noopener noreferrer">
+              {{ user.website }}
+            </a>
+            <ng-template #noWebsite>No disponible</ng-template>
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Información Personal</h3>
+        <div class="detail-item">
+          <label>ID:</label>
+          <span>{{ user.id }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Fecha de Registro:</label>
+          <span>{{ user.createdAt | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Última Actualización:</label>
+          <span>{{ user.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="user.address">
+        <h3>Dirección</h3>
+        <div class="detail-item">
+          <label>Calle:</label>
+          <span>{{ user.address.street }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Ciudad:</label>
+          <span>{{ user.address.city }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Código Postal:</label>
+          <span>{{ user.address.zipcode }}</span>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="user.company">
+        <h3>Información Laboral</h3>
+        <div class="detail-item">
+          <label>Empresa:</label>
+          <span>{{ user.company.name }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Puesto:</label>
+          <span>{{ user.company.position }}</span>
+      </div>
+    </div>
+  </div>
+</div>
